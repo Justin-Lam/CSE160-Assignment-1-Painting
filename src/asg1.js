@@ -17,8 +17,7 @@ let gl;
 let a_Position;
 let u_FragColor;
 
-// Set up the canvas and gl variables
-function setupWebGL() {
+function getCanvasAndContext() {
 	canvas = document.getElementById('webgl');
 	gl = getWebGLContext(canvas);
 	if (!gl) {
@@ -27,8 +26,7 @@ function setupWebGL() {
 	}
 }
 
-// Set up GLSL shader programs and connect GLSL variables
-function connectVariablesToGLSL() {
+function compileShadersAndConnectVariables() {
 	if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
 		throw new Error("Failed to intialize shaders");
 		return;
@@ -48,34 +46,33 @@ function connectVariablesToGLSL() {
 }
 
 function main() {
-	setupWebGL();
-	connectVariablesToGLSL();
-	canvas.onmousedown = click;
+	getCanvasAndContext();
+	compileShadersAndConnectVariables();
+	canvas.onmousedown = handleClick;
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
-const g_points = [];	// The array for the position of a mouse press
-const g_colors = [];	// The array to store the color of a point
-function click(e) {
-	const [x, y] = convertCoordinatesEventToGL(e);
+const g_points = [];
+const g_colors = [];
+function handleClick(e) {
+	const [x, y] = eventCoordsToGL(e);
 
-	// Store the coordinates to g_points array
+	// Store point
 	g_points.push([x, y]);
-	// Store the coordinates to g_colors array
-	if (x >= 0.0 && y >= 0.0) {      // First quadrant
-		g_colors.push([1.0, 0.0, 0.0, 1.0]);  // Red
-	} else if (x < 0.0 && y < 0.0) { // Third quadrant
-		g_colors.push([0.0, 1.0, 0.0, 1.0]);  // Green
-	} else {                         // Others
-		g_colors.push([1.0, 1.0, 1.0, 1.0]);  // White
+	// Store color
+	if (x >= 0.0 && y >= 0.0) {			// first quadrant
+		g_colors.push([1.0, 0.0, 0.0, 1.0]);	// red
+	} else if (x < 0.0 && y < 0.0) {	// third quadrant
+		g_colors.push([0.0, 1.0, 0.0, 1.0]);	// green
+	} else {							// others
+		g_colors.push([1.0, 1.0, 1.0, 1.0]);	// white
 	}
 
-	renderAllShapes();
+	render();
 }
 
-// Extract the event click and return it in WebGL coordinates
-function convertCoordinatesEventToGL(e) {
+function eventCoordsToGL(e) {
 	let x = e.clientX;
 	let y = e.clientY;
 	const rect = e.target.getBoundingClientRect();
@@ -84,8 +81,7 @@ function convertCoordinatesEventToGL(e) {
 	return [x, y];
 }
 
-// Draw every shape that's supposed to be in the canvas
-function renderAllShapes() {
+function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 	for(let i = 0; i < g_points.length; i++) {
 		const xy = g_points[i];
