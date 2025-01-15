@@ -45,9 +45,17 @@ function compileShadersAndConnectVariables() {
 	}
 }
 
+const g_selectedColor = [1.0, 1.0, 1.0, 1.0];		// white
+function addHtmlUIActions() {
+	document.getElementById("slider_r").addEventListener("mouseup", function() { g_selectedColor[0] = this.value / 100; });
+	document.getElementById("slider_g").addEventListener("mouseup", function() { g_selectedColor[1] = this.value / 100; });
+	document.getElementById("slider_b").addEventListener("mouseup", function() { g_selectedColor[2] = this.value / 100; });
+}
+
 function main() {
 	getCanvasAndContext();
 	compileShadersAndConnectVariables();
+	addHtmlUIActions();
 	canvas.onmousedown = handleClick;
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT);
@@ -57,18 +65,8 @@ const g_points = [];
 const g_colors = [];
 function handleClick(e) {
 	const [x, y] = eventCoordsToGL(e);
-
-	// Store point
 	g_points.push([x, y]);
-	// Store color
-	if (x >= 0.0 && y >= 0.0) {			// first quadrant
-		g_colors.push([1.0, 0.0, 0.0, 1.0]);	// red
-	} else if (x < 0.0 && y < 0.0) {	// third quadrant
-		g_colors.push([0.0, 1.0, 0.0, 1.0]);	// green
-	} else {							// others
-		g_colors.push([1.0, 1.0, 1.0, 1.0]);	// white
-	}
-
+	g_colors.push(g_selectedColor.slice());		// use slice to get a copy
 	render();
 }
 
