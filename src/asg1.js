@@ -1,8 +1,9 @@
 const VSHADER_SOURCE = `
 	attribute vec4 a_Position;
+	uniform float u_Size;
 	void main() {
 		gl_Position = a_Position;
-		gl_PointSize = 10.0;
+		gl_PointSize = u_Size;
 	}`;
 
 const FSHADER_SOURCE = `
@@ -15,6 +16,7 @@ const FSHADER_SOURCE = `
 let canvas;
 let gl;
 let a_Position;
+let u_Size;
 let u_FragColor;
 
 function getCanvasAndContext() {
@@ -32,13 +34,19 @@ function compileShadersAndConnectVariables() {
 		return;
 	}
 
-	a_Position = gl.getAttribLocation(gl.program, 'a_Position');
+	a_Position = gl.getAttribLocation(gl.program, "a_Position");
 	if (a_Position < 0) {
 		throw new Error("Failed to get the storage location of a_Position");
 		return;
 	}
 
-	u_FragColor = gl.getUniformLocation(gl.program, 'u_FragColor');
+	u_Size = gl.getUniformLocation(gl.program, "u_Size");
+	if (!u_Size) {
+		throw new Error("Failed to get the storage location of u_Size");
+		return;
+	}
+
+	u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
 	if (!u_FragColor) {
 		throw new Error("Failed to get the storage location of u_FragColor");
 		return;
@@ -46,10 +54,12 @@ function compileShadersAndConnectVariables() {
 }
 
 const g_selectedColor = [1.0, 1.0, 1.0, 1.0];		// white
+let g_selectedSize = 5;
 function addHtmlUIActions() {
 	document.getElementById("slider_r").addEventListener("mouseup", function() { g_selectedColor[0] = this.value / 100; });
 	document.getElementById("slider_g").addEventListener("mouseup", function() { g_selectedColor[1] = this.value / 100; });
 	document.getElementById("slider_b").addEventListener("mouseup", function() { g_selectedColor[2] = this.value / 100; });
+	document.getElementById("slider_size").addEventListener("mouseup", function() { g_selectedSize = this.value; });
 }
 
 function main() {
@@ -63,10 +73,14 @@ function main() {
 
 const g_points = [];
 const g_colors = [];
+const g_sizes = [];
 function handleClick(e) {
 	const [x, y] = eventCoordsToGL(e);
+
 	g_points.push([x, y]);
 	g_colors.push(g_selectedColor.slice());		// use slice to get a copy
+	g_sizes.push(g_selectedSize);
+
 	render();
 }
 
@@ -84,8 +98,12 @@ function render() {
 	for(let i = 0; i < g_points.length; i++) {
 		const xy = g_points[i];
 		const rgba = g_colors[i];
+		const size = g_sizes[i];
+
 		gl.vertexAttrib3f(a_Position, xy[0], xy[1], 0.0);
+		gl.uniform1f(u_Size, size);
 		gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
+
 		gl.drawArrays(gl.POINTS, 0, 1);
 	}
 }
