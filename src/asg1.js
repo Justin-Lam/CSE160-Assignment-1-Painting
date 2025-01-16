@@ -55,7 +55,7 @@ function compileShadersAndConnectVariables() {
 
 const g_selectedColor = [1.0, 1.0, 1.0, 1.0];		// white
 let g_selectedSize = 5;
-function addHtmlUIActions() {
+function createUIEvents() {
 	document.getElementById("slider_r").addEventListener("mouseup", function() { g_selectedColor[0] = this.value / 100; });
 	document.getElementById("slider_g").addEventListener("mouseup", function() { g_selectedColor[1] = this.value / 100; });
 	document.getElementById("slider_b").addEventListener("mouseup", function() { g_selectedColor[2] = this.value / 100; });
@@ -65,21 +65,21 @@ function addHtmlUIActions() {
 function main() {
 	getCanvasAndContext();
 	compileShadersAndConnectVariables();
-	addHtmlUIActions();
+	createUIEvents();
 	canvas.onmousedown = handleClick;
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
-const g_points = [];
-const g_colors = [];
-const g_sizes = [];
+const g_shapesList = [];
 function handleClick(e) {
 	const [x, y] = eventCoordsToGL(e);
 
-	g_points.push([x, y]);
-	g_colors.push(g_selectedColor.slice());		// use slice to get a copy
-	g_sizes.push(g_selectedSize);
+	const point = new Point();
+	point.pos = [x, y];
+	point.color = g_selectedColor.slice();
+	point.size = g_selectedSize;
+	g_shapesList.push(point);
 
 	render();
 }
@@ -95,15 +95,7 @@ function eventCoordsToGL(e) {
 
 function render() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
-	for(let i = 0; i < g_points.length; i++) {
-		const xy = g_points[i];
-		const rgba = g_colors[i];
-		const size = g_sizes[i];
-
-		gl.vertexAttrib3f(a_Position, xy[0], xy[1], 0.0);
-		gl.uniform1f(u_Size, size);
-		gl.uniform4f(u_FragColor, rgba[0], rgba[1], rgba[2], rgba[3]);
-
-		gl.drawArrays(gl.POINTS, 0, 1);
+	for(let i = 0; i < g_shapesList.length; i++) {
+		g_shapesList[i].render();
 	}
 }
