@@ -21,7 +21,7 @@ let u_FragColor;
 
 function getCanvasAndContext() {
 	canvas = document.getElementById('webgl');
-	gl = getWebGLContext(canvas);
+	gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
 	if (!gl) {
 		throw new Error("Failed to get the rendering context for WebGL");
 		return;
@@ -70,7 +70,7 @@ function main() {
 	getCanvasAndContext();
 	compileShadersAndConnectVariables();
 	createUIEvents();
-	canvas.onmousedown = handleClick;
+	canvas.onmousemove = function(e) { if (e.buttons === 1) { handleClick(e) } };
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT);
 }
