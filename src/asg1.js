@@ -56,6 +56,10 @@ function compileShadersAndConnectVariables() {
 const g_selectedColor = [1.0, 1.0, 1.0, 1.0];		// white
 let g_selectedSize = 5;
 function createUIEvents() {
+	document.getElementById("clearButton").onclick = function() {
+		g_shapesList = [];
+		render();
+	};
 	document.getElementById("slider_r").addEventListener("mouseup", function() { g_selectedColor[0] = this.value / 100; });
 	document.getElementById("slider_g").addEventListener("mouseup", function() { g_selectedColor[1] = this.value / 100; });
 	document.getElementById("slider_b").addEventListener("mouseup", function() { g_selectedColor[2] = this.value / 100; });
@@ -71,7 +75,7 @@ function main() {
 	gl.clear(gl.COLOR_BUFFER_BIT);
 }
 
-const g_shapesList = [];
+let g_shapesList = [];
 function handleClick(e) {
 	const [x, y] = eventCoordsToGL(e);
 
