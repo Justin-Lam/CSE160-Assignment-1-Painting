@@ -1,4 +1,5 @@
 class Image {
+	alpha = 1.0;
 	render() {
 		// used https://rgbcolorpicker.com/0-1 to get colors
 		const LIGHT_BLUE = [0.49, 0.847, 0.949];
@@ -11,67 +12,67 @@ class Image {
 		const DARK_GREEN = [0.18, 0.612, 0.043];
 
 		// Sky
-		setColor(LIGHT_BLUE);
+		this.setColor(LIGHT_BLUE);
 		drawTriangle([-1.0, 1.0, -1.0, 0.5, 1.0, 0.5]);
 		drawTriangle([1.0, 1.0, -1.0, 1.0, 1.0, 0.5]);
 
 		// Ground
-		setColor(LIGHT_ORANGE);
+		this.setColor(LIGHT_ORANGE);
 		drawTriangle([-1.0, 0.5, -1.0, -1.0, 1.0, -1.0]);
 		drawTriangle([1.0, 0.5, -1.0, 0.5, 1.0, -1.0]);
 
 		// Road
-		setColor(TAN);	// white
+		this.setColor(TAN);	// white
 		drawTriangle([0.0, 0.5, -0.25, -1.0, 0.25, -1.0]);
 
 		// Left Pyramid
-		setColor(YELLOW);
+		this.setColor(YELLOW);
 		drawTriangle([-0.55, 0.6, -0.9, -0.15, -0.20, -0.15]);
-		setColor(YELLOW_SHADED);
+		this.setColor(YELLOW_SHADED);
 		drawTriangle([-0.55, 0.6, -0.2, -0.15, -0.125, 0.2]);
 
 		// Right Pyramid
-		setColor(YELLOW);
+		this.setColor(YELLOW);
 		drawTriangle([0.55, 0.6, 0.9, -0.15, 0.20, -0.15]);
-		setColor(YELLOW_SHADED);
+		this.setColor(YELLOW_SHADED);
 		drawTriangle([0.55, 0.6, 0.2, -0.15, 0.125, 0.2]);
 
 		// Left Palm Tree
-		setColor(BROWN);										// trunk
+		this.setColor(BROWN);										// trunk
 		drawTriangle([-0.5, -0.2, -0.6, -0.9, -0.5, -0.9]);
 		drawTriangle([-0.6, -0.2, -0.6, -0.9, -0.5, -0.2]);
-		setColor(DARK_GREEN);									// left back leaf
+		this.setColor(DARK_GREEN);									// left back leaf
 		drawTriangle([-0.7, -0.05, -0.6, -0.2, -0.5, -0.2]);
 		drawTriangle([-0.7, -0.05, -0.9, -0.4, -0.6, -0.1]);
-		setColor(DARK_GREEN);									// right back leaf
+		this.setColor(DARK_GREEN);									// right back leaf
 		drawTriangle([-0.4, -0.05, -0.6, -0.2, -0.5, -0.2]);
 		drawTriangle([-0.4, -0.05, -0.5, -0.1, -0.2, -0.4]);
-		setColor(LIGHT_GREEN);									// left front leaf
+		this.setColor(LIGHT_GREEN);									// left front leaf
 		drawTriangle([-0.6, 0.0, -0.6, -0.2, -0.55, -0.2]);
 		drawTriangle([-0.6, 0.0, -0.8, -0.5, -0.6, -0.1]);
-		setColor(LIGHT_GREEN);									// right front leaf
+		this.setColor(LIGHT_GREEN);									// right front leaf
 		drawTriangle([-0.5, 0.0, -0.55, -0.2, -0.5, -0.2]);
 		drawTriangle([-0.5, 0.0, -0.5, -0.1, -0.3, -0.5]);
 
 		// Right Palm Tree
-		setColor(BROWN);										// trunk
+		this.setColor(BROWN);										// trunk
 		drawTriangle([0.5, -0.2, 0.6, -0.9, 0.5, -0.9]);
 		drawTriangle([0.6, -0.2, 0.6, -0.9, 0.5, -0.2]);
-		setColor(DARK_GREEN);									// left back leaf
+		this.setColor(DARK_GREEN);									// left back leaf
 		drawTriangle([0.4, -0.05, 0.6, -0.2, 0.5, -0.2]);
 		drawTriangle([0.4, -0.05, 0.5, -0.1, 0.2, -0.4]);
-		setColor(DARK_GREEN);									// right back leaf
+		this.setColor(DARK_GREEN);									// right back leaf
 		drawTriangle([0.7, -0.05, 0.6, -0.2, 0.5, -0.2]);
 		drawTriangle([0.7, -0.05, 0.9, -0.4, 0.6, -0.1]);
-		setColor(LIGHT_GREEN);									// left front leaf
+		this.setColor(LIGHT_GREEN);									// left front leaf
 		drawTriangle([0.5, 0.0, 0.55, -0.2, 0.5, -0.2]);
 		drawTriangle([0.5, 0.0, 0.5, -0.1, 0.3, -0.5]);
-		setColor(LIGHT_GREEN);									// right front leaf
+		this.setColor(LIGHT_GREEN);									// right front leaf
 		drawTriangle([0.6, 0.0, 0.6, -0.2, 0.55, -0.2]);
 		drawTriangle([0.6, 0.0, 0.8, -0.5, 0.6, -0.1]);
+	}
 
-		function setColor(color) {
-			gl.uniform4f(u_FragColor, color[0], color[1], color[2], 1.0);
-		}
+	setColor(color) {
+		gl.uniform4f(u_FragColor, color[0], color[1], color[2], this.alpha);
 	}
 }

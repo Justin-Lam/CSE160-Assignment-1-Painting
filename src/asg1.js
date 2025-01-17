@@ -21,7 +21,10 @@ let u_FragColor;
 
 function getCanvasAndContext() {
 	canvas = document.getElementById('webgl');
-	gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
+	gl = canvas.getContext("webgl", {
+		preserveDrawingBuffer: true,
+		premultipliedAlpha: false		// learned I need to do this for alpha to work from https://webglfundamentals.org/webgl/lessons/webgl-and-alpha.html
+	});
 	if (!gl) {
 		throw new Error("Failed to get the rendering context for WebGL");
 	}
@@ -60,7 +63,9 @@ function createUIEvents() {
 	document.getElementById("triangleButton").onclick = function() { g_selectedShape = TRIANGLE; };
 	document.getElementById("circleButton").onclick = function() { g_selectedShape = CIRCLE; };
 	document.getElementById("drawImageButton").onclick = function() {
-		g_shapesList.push(new Image());
+		const image = new Image();
+		image.alpha = g_selectedColor[3];
+		g_shapesList.push(image);
 		render();
 	};
 	document.getElementById("clearButton").onclick = function() {
@@ -70,6 +75,7 @@ function createUIEvents() {
 	document.getElementById("slider_r").addEventListener("mouseup", function() { g_selectedColor[0] = this.value / 100; });
 	document.getElementById("slider_g").addEventListener("mouseup", function() { g_selectedColor[1] = this.value / 100; });
 	document.getElementById("slider_b").addEventListener("mouseup", function() { g_selectedColor[2] = this.value / 100; });
+	document.getElementById("slider_a").addEventListener("mouseup", function() { g_selectedColor[3] = this.value / 100; });
 	document.getElementById("slider_size").addEventListener("mouseup", function() { g_selectedSize = this.value; });
 	document.getElementById("slider_cirSeg").addEventListener("mouseup", function() { g_selectedCircleSegments = this.value; });
 }

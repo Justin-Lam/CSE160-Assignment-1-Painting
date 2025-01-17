@@ -6,7 +6,7 @@
   </head>
 
   <body onload="main()">
-	<canvas id="webgl" width="400" height="400">
+	<canvas id="webgl" width="400" height="400" style="background: black;">
 	Please use a browser that supports "canvas"
 	</canvas>
 
@@ -26,10 +26,13 @@
 	<br>
 	<label>Blue</label>
 	<input type="range" min="0" max="100" value="100" class="slider" id="slider_b">
+	<br>
+	<label>Alpha</label>
+	<input type="range" min="0" max="100" value="100" class="slider" id="slider_a">
 
 	<br><br>
 	<label>Size</label>
-	<input type="range" min="5" max="40" value="0" class="slider" id="slider_size">
+	<input type="range" min="5" max="40" value="5" class="slider" id="slider_size">
 
 	<br><br>
 	<label>Circle Segments</label>
