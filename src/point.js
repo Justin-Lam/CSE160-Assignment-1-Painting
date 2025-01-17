@@ -1,6 +1,5 @@
 class Point {
 	constructor() {
-		this.shape = "point";
 		this.pos = [0.0, 0.0, 0.0];
 		this.color = [1.0, 1.0, 1.0, 1.0];	// white
 		this.size = 5;

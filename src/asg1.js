@@ -50,12 +50,14 @@ function compileShadersAndConnectVariables() {
 
 const POINT = 0;
 const TRIANGLE = 1;
+const CIRCLE = 2;
 let g_selectedShape = POINT;
 const g_selectedColor = [1.0, 1.0, 1.0, 1.0];		// white
 let g_selectedSize = 5;
 function createUIEvents() {
 	document.getElementById("pointButton").onclick = function() { g_selectedShape = POINT; };
 	document.getElementById("triangleButton").onclick = function() { g_selectedShape = TRIANGLE; };
+	document.getElementById("circleButton").onclick = function() { g_selectedShape = CIRCLE; };
 	document.getElementById("clearButton").onclick = function() {
 		g_shapesList = [];
 		render();
@@ -84,8 +86,11 @@ function handleClick(e) {
 	if (g_selectedShape === POINT) {
 		point = new Point();
 	}
-	else {
+	else if (g_selectedShape === TRIANGLE) {
 		point = new Triangle();
+	}
+	else {
+		point = new Circle();
 	}
 	point.pos = [x, y];
 	point.color = g_selectedColor.slice();
