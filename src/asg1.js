@@ -24,38 +24,38 @@ function getCanvasAndContext() {
 	gl = canvas.getContext("webgl", { preserveDrawingBuffer: true });
 	if (!gl) {
 		throw new Error("Failed to get the rendering context for WebGL");
-		return;
 	}
 }
 
 function compileShadersAndConnectVariables() {
 	if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
 		throw new Error("Failed to intialize shaders");
-		return;
 	}
 
 	a_Position = gl.getAttribLocation(gl.program, "a_Position");
 	if (a_Position < 0) {
 		throw new Error("Failed to get the storage location of a_Position");
-		return;
 	}
 
 	u_Size = gl.getUniformLocation(gl.program, "u_Size");
 	if (!u_Size) {
 		throw new Error("Failed to get the storage location of u_Size");
-		return;
 	}
 
 	u_FragColor = gl.getUniformLocation(gl.program, "u_FragColor");
 	if (!u_FragColor) {
 		throw new Error("Failed to get the storage location of u_FragColor");
-		return;
 	}
 }
 
+const POINT = 0;
+const TRIANGLE = 1;
+let g_selectedShape = POINT;
 const g_selectedColor = [1.0, 1.0, 1.0, 1.0];		// white
 let g_selectedSize = 5;
 function createUIEvents() {
+	document.getElementById("pointButton").onclick = function() { g_selectedShape = POINT; };
+	document.getElementById("triangleButton").onclick = function() { g_selectedShape = TRIANGLE; };
 	document.getElementById("clearButton").onclick = function() {
 		g_shapesList = [];
 		render();
@@ -70,6 +70,7 @@ function main() {
 	getCanvasAndContext();
 	compileShadersAndConnectVariables();
 	createUIEvents();
+	canvas.onmousedown = handleClick;
 	canvas.onmousemove = function(e) { if (e.buttons === 1) { handleClick(e) } };
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT);
@@ -79,7 +80,13 @@ let g_shapesList = [];
 function handleClick(e) {
 	const [x, y] = eventCoordsToGL(e);
 
-	const point = new Point();
+	let point = null;
+	if (g_selectedShape === POINT) {
+		point = new Point();
+	}
+	else {
+		point = new Triangle();
+	}
 	point.pos = [x, y];
 	point.color = g_selectedColor.slice();
 	point.size = g_selectedSize;
