@@ -54,6 +54,7 @@ const CIRCLE = 2;
 let g_selectedShape = POINT;
 const g_selectedColor = [1.0, 1.0, 1.0, 1.0];		// white
 let g_selectedSize = 5;
+let g_selectedCircleSegments = 10;
 function createUIEvents() {
 	document.getElementById("pointButton").onclick = function() { g_selectedShape = POINT; };
 	document.getElementById("triangleButton").onclick = function() { g_selectedShape = TRIANGLE; };
@@ -66,6 +67,7 @@ function createUIEvents() {
 	document.getElementById("slider_g").addEventListener("mouseup", function() { g_selectedColor[1] = this.value / 100; });
 	document.getElementById("slider_b").addEventListener("mouseup", function() { g_selectedColor[2] = this.value / 100; });
 	document.getElementById("slider_size").addEventListener("mouseup", function() { g_selectedSize = this.value; });
+	document.getElementById("slider_cirSeg").addEventListener("mouseup", function() { g_selectedCircleSegments = this.value; });
 }
 
 function main() {
@@ -91,6 +93,7 @@ function handleClick(e) {
 	}
 	else {
 		point = new Circle();
+		point.segments = g_selectedCircleSegments;
 	}
 	point.pos = [x, y];
 	point.color = g_selectedColor.slice();
