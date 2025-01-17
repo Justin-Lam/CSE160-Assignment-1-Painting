@@ -59,6 +59,10 @@ function createUIEvents() {
 	document.getElementById("pointButton").onclick = function() { g_selectedShape = POINT; };
 	document.getElementById("triangleButton").onclick = function() { g_selectedShape = TRIANGLE; };
 	document.getElementById("circleButton").onclick = function() { g_selectedShape = CIRCLE; };
+	document.getElementById("drawImageButton").onclick = function() {
+		g_shapesList.push(new Image());
+		render();
+	};
 	document.getElementById("clearButton").onclick = function() {
 		g_shapesList = [];
 		render();
@@ -84,21 +88,21 @@ let g_shapesList = [];
 function handleClick(e) {
 	const [x, y] = eventCoordsToGL(e);
 
-	let point = null;
+	let shape = null;
 	if (g_selectedShape === POINT) {
-		point = new Point();
+		shape = new Point();
 	}
 	else if (g_selectedShape === TRIANGLE) {
-		point = new Triangle();
+		shape = new Triangle();
 	}
 	else {
-		point = new Circle();
-		point.segments = g_selectedCircleSegments;
+		shape = new Circle();
+		shape.segments = g_selectedCircleSegments;
 	}
-	point.pos = [x, y];
-	point.color = g_selectedColor.slice();
-	point.size = g_selectedSize;
-	g_shapesList.push(point);
+	shape.pos = [x, y];
+	shape.color = g_selectedColor.slice();
+	shape.size = g_selectedSize;
+	g_shapesList.push(shape);
 
 	render();
 }
